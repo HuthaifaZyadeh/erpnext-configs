@@ -111,6 +111,12 @@ docker compose -p local exec backend bench --site erp.localhost install-app hrms
 - If `docker compose` is not found, ensure the `docker-compose-plugin` is installed and try `docker compose version`.
 - If you get permission errors after adding your user to the `docker` group, log out and log back in or run `newgrp docker`.
 - For production, secure your MariaDB and Frappe/ERPNext credentials, and enable TLS (Let's Encrypt or other CA).
+- For production, enable the scheduler:
+
+```bash
+docker compose -p "$PROJECT_NAME" exec -T backend \
+bench --site "$SITE_NAME" enable-scheduler
+```
 
 ## References
 
