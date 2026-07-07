@@ -71,11 +71,15 @@ sudo usermod -aG docker $USER
 These steps assume you have the workspace files `compose.local.yaml` and related env files in the current directory, and that you want a local testing setup.
 
 > Replace `erp.localhost` with your production domain when deploying to a public server.
+> cd to the correct environment directory before running the commands.
 
-## 1 — Run the containers
+## 1 — Expose env variables and run the containers
 
 ```bash
-docker compose -p local -f compose.local.yaml up -d
+set -a
+source local.env
+set +a
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml up -d
 ```
 
 This starts the services defined in `compose.local.yaml` in detached mode.
@@ -85,7 +89,7 @@ This starts the services defined in `compose.local.yaml` in detached mode.
 Create a new site (example uses `erp.localhost` and simple passwords for local testing):
 
 ```bash
-docker compose -p local exec backend bench new-site erp.localhost \
+docker compose -p "$PROJECT_NAME" exec backend bench new-site "$SITE_NAME" \
   --mariadb-user-host-login-scope='%' \
   --db-root-password 123 \
   --admin-password admin \
@@ -95,8 +99,8 @@ docker compose -p local exec backend bench new-site erp.localhost \
 Optionally add additional apps (example: HRMS):
 
 ```bash
-docker compose -p local exec backend bench get-app hrms
-docker compose -p local exec backend bench --site erp.localhost install-app hrms
+docker compose -p "$PROJECT_NAME" exec backend bench get-app hrms
+docker compose -p "$PROJECT_NAME" exec backend bench --site "$SITE_NAME" install-app hrms
 ```
 
 ## 3 — Open the site
