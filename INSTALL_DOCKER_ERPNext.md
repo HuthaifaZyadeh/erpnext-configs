@@ -77,7 +77,7 @@ These steps assume you have the workspace files `compose.local.yaml` and related
 ## 1 — Expose env variables and run the containers
 
 ```bash
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env up -d
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml up -d
 ```
 
 This starts the services defined in `compose.local.yaml` in detached mode.
@@ -87,7 +87,7 @@ This starts the services defined in `compose.local.yaml` in detached mode.
 Create a new site (example uses `erp.localhost` and simple passwords for local testing):
 
 ```bash
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench new-site "$SITE_NAME" \
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench new-site "$SITE_NAME" \
   --mariadb-user-host-login-scope='%' \
   --db-root-password 123 \
   --admin-password admin \
@@ -97,8 +97,8 @@ docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exe
 Optionally add additional apps (example: HRMS):
 
 ```bash
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench get-app hrms
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench --site "$SITE_NAME" install-app hrms
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench get-app hrms
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench --site "$SITE_NAME" install-app hrms
 ```
 
 ## 3 — Open the site
@@ -116,7 +116,7 @@ docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exe
 - For production, enable the scheduler:
 
 ```bash
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec -T backend \
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec -T backend \
 bench --site "$SITE_NAME" enable-scheduler
 ```
 
