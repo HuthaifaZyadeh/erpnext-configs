@@ -71,15 +71,13 @@ sudo usermod -aG docker $USER
 These steps assume you have the workspace files `compose.local.yaml` and related env files in the current directory, and that you want a local testing setup.
 
 > Replace `erp.localhost` with your production domain when deploying to a public server.
+> Ensure to assign the correct values in `.env` files to variables `PROJECT_NAME`, `SITE_NAME`, `SITES_RULE` and other variables before running the commands.
 > cd to the correct environment directory before running the commands.
 
 ## 1 — Expose env variables and run the containers
 
 ```bash
-set -a
-source local.env
-set +a
-docker compose -p "$PROJECT_NAME" -f compose.local.yaml up -d
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env up -d
 ```
 
 This starts the services defined in `compose.local.yaml` in detached mode.
@@ -89,7 +87,7 @@ This starts the services defined in `compose.local.yaml` in detached mode.
 Create a new site (example uses `erp.localhost` and simple passwords for local testing):
 
 ```bash
-docker compose -p "$PROJECT_NAME" exec backend bench new-site "$SITE_NAME" \
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench new-site "$SITE_NAME" \
   --mariadb-user-host-login-scope='%' \
   --db-root-password 123 \
   --admin-password admin \
@@ -99,8 +97,8 @@ docker compose -p "$PROJECT_NAME" exec backend bench new-site "$SITE_NAME" \
 Optionally add additional apps (example: HRMS):
 
 ```bash
-docker compose -p "$PROJECT_NAME" exec backend bench get-app hrms
-docker compose -p "$PROJECT_NAME" exec backend bench --site "$SITE_NAME" install-app hrms
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench get-app hrms
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec backend bench --site "$SITE_NAME" install-app hrms
 ```
 
 ## 3 — Open the site
@@ -118,7 +116,7 @@ docker compose -p "$PROJECT_NAME" exec backend bench --site "$SITE_NAME" install
 - For production, enable the scheduler:
 
 ```bash
-docker compose -p "$PROJECT_NAME" exec -T backend \
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml --env-file local.env exec -T backend \
 bench --site "$SITE_NAME" enable-scheduler
 ```
 
