@@ -71,6 +71,7 @@ sudo usermod -aG docker $USER
 These steps assume you have the workspace files `compose.local.yaml` and related env files in the current directory, and that you want a local testing setup.
 
 > Replace `erp.localhost` with your production domain when deploying to a public server.
+> Copy .env.example from local to the flavor you want and remove .example
 > Ensure to assign the correct values in `.env` files to variables `PROJECT_NAME`, `SITE_NAME`, `SITES_RULE` and other variables before running the commands.
 > cd to the correct environment directory before running the commands.
 
