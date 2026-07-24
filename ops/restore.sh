@@ -16,17 +16,26 @@ fi
 # Look for a flavor-specific env file in a sibling folder (../<flavor>/.env)
 # or a local env file named .env.<flavor>
 ENV_FILE="../${FLAVOR}/.env"
-if [ -f "$ENV_FILE" ]; then
-  # shellcheck source=/dev/null
-  source "$ENV_FILE"
-else
+if [ ! -f "$ENV_FILE" ]; then
   echo "Env file for flavor '$FLAVOR' not found. Tried: $ENV_FILE or .env.${FLAVOR}"
   exit 1
 fi
 
-: "${PROJECT_NAME:?PROJECT_NAME must be set in env file}"
-: "${SITE_NAME:?SITE_NAME must be set in env file}"
-: "${BACKUP_ROOT:?BACKUP_ROOT must be set in env file}"
+extract_required_env_value() {
+  local key="$1"
+  local value
+
+  value="$(grep -E "^${key}=" "$ENV_FILE" | head -n 1 | cut -d= -f2- | tr -d '\r')"
+  if [ -z "$value" ]; then
+    echo "Required variable '$key' not found in '$ENV_FILE'" >&2
+    exit 1
+  fi
+
+  printf '%s' "$value"
+}
+
+PROJECT_NAME="$(extract_required_env_value "PROJECT_NAME")"
+SITE_NAME="$(extract_required_env_value "SITE_NAME")"
 
 # Use a flavor-specific subdirectory under BACKUP_ROOT
 BACKUP_ROOT="${BACKUP_ROOT%/}/$FLAVOR"
