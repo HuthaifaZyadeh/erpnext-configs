@@ -85,7 +85,7 @@ This starts the services defined in `compose.local.yaml` in detached mode.
 
 ## 2 — Create site and install apps
 
-Create a new site (example uses `erp.localhost` and simple passwords for local testing):
+Create a new site (example uses `erp.localhost` and simple passwords for local testing. For production, consider removing the password options and enter the password only when prompted):
 
 ```bash
 docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench new-site "$SITE_NAME" \
