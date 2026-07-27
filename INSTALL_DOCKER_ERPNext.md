@@ -78,6 +78,9 @@ These steps assume you have the workspace files `compose.local.yaml` and related
 ## 1 — Expose env variables and run the containers
 
 ```bash
+set -a
+source .env
+set +a
 docker compose -p "$PROJECT_NAME" -f compose.local.yaml up -d
 ```
 
