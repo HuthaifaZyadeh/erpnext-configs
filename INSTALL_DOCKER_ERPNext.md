@@ -98,11 +98,19 @@ docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench new-s
   --install-app erpnext
 ```
 
-Optionally add additional apps (example: HRMS):
+# Optionally
+Add additional apps (example: HRMS):
 
 ```bash
 docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench get-app hrms
 docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench --site "$SITE_NAME" install-app hrms
+```
+
+Or create new apps:
+
+```bash
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench new-app <new-app-name>
+docker compose -p "$PROJECT_NAME" -f compose.local.yaml exec backend bench --site "$SITE_NAME" install-app <new-app-name>
 ```
 
 ## 3 — Open the site
